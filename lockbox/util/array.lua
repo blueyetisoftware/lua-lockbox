@@ -1,5 +1,4 @@
 
-local String = require("string");
 local Bit = require("lockbox.util.bit");
 local Queue = require("lockbox.util.queue");
 
@@ -15,11 +14,11 @@ Array.fromString = function(string)
     local bytes = {};
 
     local i = 1;
-    local byte = String.byte(string, i);
+    local byte = string.byte(string, i);
     while byte ~= nil do
         bytes[i] = byte;
         i = i + 1;
-        byte = String.byte(string, i);
+        byte = string.byte(string, i);
     end
 
     return bytes;
@@ -32,7 +31,7 @@ Array.toString = function(bytes)
 
     local byte = bytes[i];
     while byte ~= nil do
-        chars[i] = String.char(byte);
+        chars[i] = string.char(byte);
         i = i + 1;
         byte = bytes[i];
     end
@@ -89,15 +88,15 @@ end
 
 local fromHexTable = {};
 for i = 0, 255 do
-    fromHexTable[String.format("%02X", i)] = i;
-    fromHexTable[String.format("%02x", i)] = i;
+    fromHexTable[string.format("%02X", i)] = i;
+    fromHexTable[string.format("%02x", i)] = i;
 end
 
 Array.fromHex = function(hex)
     local array = {};
 
-    for i = 1, String.len(hex) / 2 do
-        local h = String.sub(hex, i * 2 - 1, i * 2);
+    for i = 1, string.len(hex) / 2 do
+        local h = string.sub(hex, i * 2 - 1, i * 2);
         array[i] = fromHexTable[h];
     end
 
@@ -107,7 +106,7 @@ end
 
 local toHexTable = {};
 for i = 0, 255 do
-    toHexTable[i] = String.format("%02X", i);
+    toHexTable[i] = string.format("%02X", i);
 end
 
 Array.toHex = function(array)
@@ -202,9 +201,21 @@ end
 Array.slice = function(input, start, stop)
     local out = {};
 
-    for i = start, stop do
-        out[i - start + 1] = input[i];
+    if start == nil then
+        start = 1
+    elseif start < 0 then
+        start = #input + start + 1
     end
+    if stop == nil then
+        stop = #input
+    elseif stop < 0 then
+        stop = #input + stop + 1
+    end
+
+    for i = start, stop do
+        table.insert(out, input[i])
+    end
+
     return out;
 end
 

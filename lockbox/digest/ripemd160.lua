@@ -1,8 +1,6 @@
 require("lockbox").insecure();
 
 local Bit = require("lockbox.util.bit");
-local String = require("string");
-local Math = require("math");
 local Queue = require("lockbox.util.queue");
 
 local AND = Bit.band;
@@ -32,7 +30,7 @@ local word2bytes = function(word)
 end
 
 local dword2bytes = function(i)
-    local b4, b5, b6, b7 = word2bytes(Math.floor(i / 0x100000000));
+    local b4, b5, b6, b7 = word2bytes(math.floor(i / 0x100000000));
     local b0, b1, b2, b3 = word2bytes(i);
     return b0, b1, b2, b3, b4, b5, b6, b7;
 end
@@ -381,7 +379,19 @@ local RIPEMD160 = function()
 
         local fmt = "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x";
 
-        return String.format(fmt,
+        return string.format(fmt,
+                 b0, b1, b2, b3, b4, b5, b6, b7, b8, b9,
+                b10, b11, b12, b13, b14, b15, b16, b17, b18, b19);
+    end
+
+    public.asString = function()
+        local  b0, b1, b2, b3 = word2bytes(A);
+        local  b4, b5, b6, b7 = word2bytes(B);
+        local  b8, b9, b10, b11 = word2bytes(C);
+        local b12, b13, b14, b15 = word2bytes(D);
+        local b16, b17, b18, b19 = word2bytes(E);
+
+        return string.pack(string.rep('B', 20),
                  b0, b1, b2, b3, b4, b5, b6, b7, b8, b9,
                 b10, b11, b12, b13, b14, b15, b16, b17, b18, b19);
     end
